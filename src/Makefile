@@ -1,5 +1,6 @@
 default:
-	make clean; make callgrind
+	make clean; make callgrind;
+	callgrind_annotate --auto=yes callgrind.out.* mm.c
 
 mm: mm.c
 	gcc mm.c -o mm
