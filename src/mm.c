@@ -3,8 +3,8 @@
 // A simple matrix multiply code to show affect of ordering and blocking
 // to compile this use gcc -O2 mm.c -lrt or icc -O2 mm.c -lrt
 
+#include <assert.h>
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -48,6 +48,28 @@ void mm_basic (int n, double* a, double* b, double* c)
 
 void mm_opt (int n, double* a, double* b, double* c, int bs)
 {
+    // int i, j, k;
+
+    // for (k = 0; k < n; k++)
+    //     for (i = 0; i < n; i++)
+    //         for (j = 0; j < n; j++)
+    //             a[i * n + j] += b[i * n + k] * c[k * n + j] ;
+
+    assert(n%bs == 0); // Asegurarnos de que n y bs son compatibles
+    int N = n/bs;
+    printf("N = %d\n", N);
+    int i, j, k;
+    int i_block, j_block, k_block;
+
+    for (i_block = 0; i_block < n; i_block+=bs)
+        for (j_block = 0; j_block < n; j_block+=bs)
+            for (k_block = 0; k_block < n; k_block+=bs)
+                for (i = i_block; i < i_block + bs; i++)
+                    for (j = j_block; j < j_block + bs; j++)
+                        for (k = k_block; k < k_block + bs; k++){
+                            a[i * n + j] += b[i * n + k] * c[k * n + j];
+                            // printf("i_block: %d j_block: %d k_block: %d i: %d j: %d k: %d\n", i_block, j_block, k_block, i, j, k);
+                        }
 }
 
 void checkmm (int n, double* a, double* aa)
