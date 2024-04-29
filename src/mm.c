@@ -55,18 +55,17 @@ void mm_opt (int n, double* a, double* b, double* c, int bs)
     //         for (j = 0; j < n; j++)
     //             a[i * n + j] += b[i * n + k] * c[k * n + j] ;
 
-    assert(n%bs == 0); // Asegurarnos de que n y bs son compatibles
     int N = n/bs;
     printf("N = %d\n", N);
     int i, j, k;
     int i_block, j_block, k_block;
 
-    for (i_block = 0; i_block < n; i_block+=bs)
-        for (j_block = 0; j_block < n; j_block+=bs)
-            for (k_block = 0; k_block < n; k_block+=bs)
-                for (i = i_block; i < i_block + bs; i++)
-                    for (j = j_block; j < j_block + bs; j++)
-                        for (k = k_block; k < k_block + bs; k++){
+    for (k_block = 0; k_block < n; k_block+=bs)
+        for (i_block = 0; i_block < n; i_block+=bs)
+            for (j_block = 0; j_block < n; j_block+=bs)
+                for (k = k_block; k < k_block + bs; k++)
+                    for (i = i_block; i < i_block + bs; i++)
+                        for (j = k_block; j < k_block + bs; j++){
                             a[i * n + j] += b[i * n + k] * c[k * n + j];
                             // printf("i_block: %d j_block: %d k_block: %d i: %d j: %d k: %d\n", i_block, j_block, k_block, i, j, k);
                         }
@@ -122,7 +121,7 @@ int main (int argc, char *argv[])
     fillmat (n, n, b) ;
     fillmat (n, n, c) ;
 
-    MEASURE_TIME ( mm_basic (n, aa, b, c) );
+    // MEASURE_TIME ( mm_basic (n, aa, b, c) );
     MEASURE_TIME ( mm_opt (n, a, b, c, bs) );
 
     checkmm (n, a, aa) ;
