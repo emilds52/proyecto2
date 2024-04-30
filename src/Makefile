@@ -10,3 +10,6 @@ callgrind: mm
 	
 clean:
 	rm -rf callgrind.out.*
+
+cacti:
+	cd ../../valgrind/cacti; ./cacti -infile cache.cfg
